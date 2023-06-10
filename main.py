@@ -2,10 +2,13 @@ from flask import Flask, render_template, redirect, request, flash
 import cv2
 import os
 from werkzeug.utils import secure_filename
+import random
+from PIL import Image
+import pillow_avif
 
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'webp', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'webp', 'png', 'jpg', 'jpeg', 'gif', "avif"}
 
 app = Flask(__name__)
 
@@ -18,27 +21,76 @@ def processImage(filename, operation):
     img = cv2.imread(f"uploads/{filename}")
     match operation:
         case "cgray":
-            imgprocessd = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            newfilename = f"static/{filename}"
-            cv2.imwrite(newfilename, imgprocessd)
-            return newfilename
+            f = f"{filename.split('.')[1]}"
+            print(f)
+            if f == "avif":
+                newfilenamee = f"{filename.split('.')[0]}"
+                ran = random.randint(100, 1000)
+                Grayimg = Image.open(f"uploads/{newfilenamee}.avif")
+                Grayimg.save(f"uploads/{ran}.jpg")
+                iom = cv2.imread(f"uploads/{ran}.jpg")
+                imgprocessd = cv2.cvtColor(iom, cv2.COLOR_BGR2GRAY)
+                newfilename = f"static/{ran}.jpg"
+                cv2.imwrite(newfilename, imgprocessd)
+                Grayimg = Image.open(f"static/{ran}.jpg")
+                Grayimg.save(f"static/{newfilenamee}.avif")
+                os. remove(f"uploads/{ran}.jpg")
+                os. remove(f"static/{ran}.jpg")
+                newfilename = f"static/{newfilenamee}.avif"
+                return newfilename
+
+            else:
+                imgprocessd = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                newfilename = f"static/{filename}"
+                cv2.imwrite(newfilename, imgprocessd)
+                return newfilename
 
         case "cpng":
-            newfilename = f"static/{filename.split('.')[0]}.png"
-            cv2.imwrite(newfilename, img)
-            return newfilename
+            f = f"{filename.split('.')[1]}"
+            print(f)
+            if f == "avif":
+                newfilename = f"{filename.split('.')[0]}"
+                PNGimg = Image.open(f"uploads/{newfilename}.avif")
+                PNGimg.save(f"static/{newfilename}.png")
+                newfilename = f"static/{newfilename}.png"
+                return newfilename
+
+            else:
+                newfilename = f"static/{filename.split('.')[0]}.png"
+                cv2.imwrite(newfilename, img)
+                return newfilename
 
         case "cjpg":
-            newfilename = f"static/{filename.split('.')[0]}.jpg"
-            cv2.imwrite(newfilename, img)
-            return newfilename
+            f = f"{filename.split('.')[1]}"
+            print(f)
+            if f == "avif":
+                newfilename = f"{filename.split('.')[0]}"
+                JPGimg = Image.open(f"uploads/{newfilename}.avif")
+                JPGimg.save(f"static/{newfilename}.jpg")
+                newfilename = f"static/{newfilename}.jpg"
+                return newfilename
+
+            else:
+                newfilename = f"static/{filename.split('.')[0]}.jpg"
+                cv2.imwrite(newfilename, img)
+                return newfilename
 
         case "cwebp":
-            newfilename = f"static/{filename.split('.')[0]}.webp"
-            cv2.imwrite(newfilename, img)
-            return newfilename
+            f = f"{filename.split('.')[1]}"
+            if f == "avif":
+                newfilename = f"{filename.split('.')[0]}"
+                WEBPimg = Image.open(f"uploads/{newfilename}.avif")
+                WEBPimg.save(f"static/{newfilename}.webp")
+                newfilename = f"static/{newfilename}.webp"
+                return newfilename
+
+            else:
+                newfilename = f"static/{filename.split('.')[0]}.webp"
+                cv2.imwrite(newfilename, img)
+                return newfilename
 
 def allowed_file(filename):
+    # print(filename.split(".")[1])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -76,3 +128,4 @@ def about():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
