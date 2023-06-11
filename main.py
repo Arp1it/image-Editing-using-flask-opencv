@@ -19,6 +19,7 @@ app.config['SECRET_KEY']='Define_The_Key'
 def processImage(filename, operation):
     print(f"The operation is {operation} and filename is {filename}")
     img = cv2.imread(f"uploads/{filename}")
+
     match operation:
         case "cgray":
             f = f"{filename.split('.')[1]}"
@@ -96,6 +97,7 @@ def processImage(filename, operation):
             Avifimg.save(f"static/{filenamee}.avif")
             newfilename = f"static/{filenamee}.avif"
             return newfilename
+
 
 def allowed_file(filename):
     # print(filename.split(".")[1])
