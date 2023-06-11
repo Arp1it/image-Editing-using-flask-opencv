@@ -22,7 +22,7 @@ def processImage(filename, operation):
     match operation:
         case "cgray":
             f = f"{filename.split('.')[1]}"
-            print(f)
+            # print(f)
             if f == "avif":
                 newfilenamee = f"{filename.split('.')[0]}"
                 ran = random.randint(100, 1000)
@@ -47,7 +47,7 @@ def processImage(filename, operation):
 
         case "cpng":
             f = f"{filename.split('.')[1]}"
-            print(f)
+            # print(f)
             if f == "avif":
                 newfilename = f"{filename.split('.')[0]}"
                 PNGimg = Image.open(f"uploads/{newfilename}.avif")
@@ -62,7 +62,7 @@ def processImage(filename, operation):
 
         case "cjpg":
             f = f"{filename.split('.')[1]}"
-            print(f)
+            # print(f)
             if f == "avif":
                 newfilename = f"{filename.split('.')[0]}"
                 JPGimg = Image.open(f"uploads/{newfilename}.avif")
@@ -89,6 +89,14 @@ def processImage(filename, operation):
                 cv2.imwrite(newfilename, img)
                 return newfilename
 
+        case "cavif":
+            f = f"{filename.split('.')[1]}"
+            filenamee = f"{filename.split('.')[0]}"
+            Avifimg = Image.open(f"uploads/{filenamee}.{f}")
+            Avifimg.save(f"static/{filenamee}.avif")
+            newfilename = f"static/{filenamee}.avif"
+            return newfilename
+
 def allowed_file(filename):
     # print(filename.split(".")[1])
     return '.' in filename and \
@@ -103,20 +111,28 @@ def home():
 def edit():
     if request.method == "POST":
         operation = request.form.get("operation")
-        # check if the post request has the file part
+        # check if the post request has the file
         if 'file' not in request.files:
-            flash('No file part')
+            flash('No file')
             return "error"
+
+
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
+
+
         if file.filename == '':
             flash('No selected file')
             return "error"
+            
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
             new = processImage(filename, operation)
+
             flash(f"Your image uploaded <a href='/{new}' target='_blank'>here</a>")
             return render_template("index.html")
 
@@ -124,8 +140,15 @@ def edit():
 
 @app.route("/about")
 def about():
-    return "about page"
+    return "about page. This is page is not working currently."
+
+@app.route("/how")
+def Howtouse():
+    return "How to use. This is page is not working currently."
+
+@app.route("/contact")
+def contact():
+    return "Contact us. This is page is not working currently."
 
 if __name__ == "__main__":
     app.run(debug=True)
-
