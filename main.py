@@ -8,7 +8,7 @@ import pillow_avif
 
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'webp', 'png', 'jpg', 'jpeg', 'gif', "avif"}
+ALLOWED_EXTENSIONS = {'webp', 'png', 'jpg', 'jpeg', 'gif', "avif", "ico"}
 
 app = Flask(__name__)
 
