@@ -20,12 +20,13 @@ def processImage(filename, operation):
     print(f"The operation is {operation} and filename is {filename}")
     img = cv2.imread(f"uploads/{filename}")
 
+    f = f"{filename.split('.')[-1]}"
+
     match operation:
         case "cgray":
-            f = f"{filename.split('.')[1]}"
             # print(f)
             if f == "avif":
-                newfilenamee = f"{filename.split('.')[0]}"
+                newfilenamee = f"{filename.replace(f'.{f}', "")}"
                 ran = random.randint(100, 1000)
                 Grayimg = Image.open(f"uploads/{newfilenamee}.avif")
                 Grayimg.save(f"uploads/{ran}.jpg")
@@ -47,55 +48,59 @@ def processImage(filename, operation):
                 return newfilename
 
         case "cpng":
-            f = f"{filename.split('.')[1]}"
             # print(f)
             if f == "avif":
-                newfilename = f"{filename.split('.')[0]}"
+                newfilename = f"{filename.replace(f'.{f}', "")}"
                 PNGimg = Image.open(f"uploads/{newfilename}.avif")
                 PNGimg.save(f"static/{newfilename}.png")
                 newfilename = f"static/{newfilename}.png"
                 return newfilename
 
             else:
-                newfilename = f"static/{filename.split('.')[0]}.png"
+                newfilename = f"static/{filename.replace(f'.{f}', "")}.png"
                 cv2.imwrite(newfilename, img)
                 return newfilename
 
         case "cjpg":
-            f = f"{filename.split('.')[1]}"
             # print(f)
             if f == "avif":
-                newfilename = f"{filename.split('.')[0]}"
+                newfilename = f"{filename.replace(f'.{f}', "")}"
                 JPGimg = Image.open(f"uploads/{newfilename}.avif")
                 JPGimg.save(f"static/{newfilename}.jpg")
                 newfilename = f"static/{newfilename}.jpg"
                 return newfilename
 
             else:
-                newfilename = f"static/{filename.split('.')[0]}.jpg"
+                newfilename = f"static/{filename.replace(f'.{f}', "")}.jpg"
                 cv2.imwrite(newfilename, img)
                 return newfilename
 
         case "cwebp":
-            f = f"{filename.split('.')[1]}"
             if f == "avif":
-                newfilename = f"{filename.split('.')[0]}"
+                newfilename = f"{filename.replace(f'.{f}', "")}"
                 WEBPimg = Image.open(f"uploads/{newfilename}.avif")
                 WEBPimg.save(f"static/{newfilename}.webp")
                 newfilename = f"static/{newfilename}.webp"
                 return newfilename
 
             else:
-                newfilename = f"static/{filename.split('.')[0]}.webp"
+                newfilename = f"static/{filename.replace(f'.{f}', '')}.webp"
                 cv2.imwrite(newfilename, img)
                 return newfilename
 
         case "cavif":
-            f = f"{filename.split('.')[1]}"
-            filenamee = f"{filename.split('.')[0]}"
+            filenamee = f"{filename.replace(f'.{f}', "")}"
             Avifimg = Image.open(f"uploads/{filenamee}.{f}")
             Avifimg.save(f"static/{filenamee}.avif")
             newfilename = f"static/{filenamee}.avif"
+            return newfilename
+        
+        case "cico":
+            filenameee = f"{filename.replace(f'.{f}', "")}"
+            # print(filenameee)
+            icoimg = Image.open(f"uploads/{filenameee}.{f}")
+            icoimg.save(f"static/{filenameee}.ico")
+            newfilename = f"static/{filenameee}.ico"
             return newfilename
 
 
@@ -133,7 +138,11 @@ def edit():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            new = processImage(filename, operation)
+            try:
+                new = processImage(filename, operation)
+            except Exception as e:
+                new = filename
+                print(e)
 
             flash(f"Your image uploaded <a href='/{new}' target='_blank'>here</a>")
             return render_template("index.html")
