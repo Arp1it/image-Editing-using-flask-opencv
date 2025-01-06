@@ -4,7 +4,7 @@ import os
 from werkzeug.utils import secure_filename
 import random
 from PIL import Image
-import pillow_avif
+import pillow_avif # pip install pillow-avif-plugin
 
 
 UPLOAD_FOLDER = 'uploads'
