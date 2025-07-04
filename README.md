@@ -1,4 +1,3 @@
-```markdown
 # Flask Image Conversion App
 
 This is a Flask web application for uploading images and performing basic image format conversions and grayscale processing. It supports common image formats including JPG, PNG, WEBP, AVIF, ICO, and GIF.
@@ -33,7 +32,6 @@ This is a Flask web application for uploading images and performing basic image 
 
 ## 📁 Project Structure
 
-```
 
 project/
 ├── app.py                 # Main Flask application
@@ -43,7 +41,6 @@ project/
 ├── uploads/               # Temporarily stores uploaded files
 └── README.md              # Project documentation
 
-````
 
 ---
 
@@ -51,6 +48,7 @@ project/
 
 1. Clone the project:
 
+````
 ```bash
 git clone https://github.com/Arp1it/image-Editing-using-flask-opencv
 cd project
